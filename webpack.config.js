@@ -26,5 +26,8 @@ module.exports = {
     publicPath: `http://localhost:8080/`,
     hot: true,
     compress: true,
+    headers: {
+      'Access-Control-Allow-Origin': `*`,
+    },
   },
 };
