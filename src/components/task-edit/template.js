@@ -39,11 +39,11 @@ export default ({
   isFavorite,
   isDone,
 }) => {
-  const isRepeat = Object.keys(repeatingDays).filter((day) => repeatingDays[day]).length;
+  const isRepeat = Object.values(repeatingDays).some((day) => day);
   const repeatClass = isRepeat ? `card--repeat` : ``;
   const deadlineClass = Date.now() > dueDate ? `card--deadline` : ``;
 
-  return `<article class="card card--${color} ${repeatClass} ${deadlineClass}">
+  return `<article class="card card--edit card--${color} ${repeatClass} ${deadlineClass}">
     <form class="card__form" method="get">
       <div class="card__inner">
         <div class="card__control">
