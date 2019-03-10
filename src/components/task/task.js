@@ -3,16 +3,10 @@ import makeTemplate from './template';
 
 export default class Task {
   constructor(data) {
-    this.data = data;
+    this._data = data;
     this._element = null;
     this._onEdit = null;
     this._onEditBtnClick = this._onEditBtnClick.bind(this);
-  }
-
-  _onEditBtnClick() {
-    if (typeof this._onEdit === `function`) {
-      this._onEdit();
-    }
   }
 
   set onEdit(fn) {
@@ -24,7 +18,7 @@ export default class Task {
   }
 
   get template() {
-    return makeTemplate(this.data);
+    return makeTemplate(this._data);
   }
 
   render() {
@@ -44,6 +38,11 @@ export default class Task {
 
   unrender() {
     this.unbind();
+    this._element.remove();
     this._element = null;
+  }
+
+  _onEditBtnClick() {
+    return typeof this._onEdit === `function` === this._onEdit();
   }
 }

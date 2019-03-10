@@ -17,15 +17,15 @@ const getHashTagsTemplate = (tags) => tags
   </span>`).join(``);
 
 const getRepeatingDaysTemplate = (repeatingDays) => Object.keys(repeatingDays)
-  .map((day) => `<input
+  .map((day, index) => `<input
     class="visually-hidden card__repeat-day-input"
     type="checkbox"
-    id="repeat-mo-5"
+    id="repeat-mo-${index + 1}"
     name="repeat"
     value="${day}"
     ${repeatingDays[day] ? `checked` : ``}
   />
-  <label class="card__repeat-day" for="repeat-mo-5"
+  <label class="card__repeat-day" for="repeat-mo-${index + 1}"
     >${day}</label
   >`).join(``);
 

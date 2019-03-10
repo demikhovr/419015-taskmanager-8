@@ -6,14 +6,7 @@ export default class TaskEdit {
     this.data = data;
     this._element = null;
     this._onSubmit = null;
-    this._onSubmitBtnClick = this._onSubmitBtnClick.bind(this);
-  }
-
-  _onSubmitBtnClick(evt) {
-    evt.preventDefault();
-    if (typeof this._onSubmit === `function`) {
-      this._onSubmit();
-    }
+    this._onFormSubmit = this._onFormSubmit.bind(this);
   }
 
   set onSubmit(fn) {
@@ -36,15 +29,20 @@ export default class TaskEdit {
 
   bind() {
     this._form = this._element.querySelector(`.card__form`);
-    this._form.addEventListener(`submit`, this._onSubmitBtnClick);
+    this._form.addEventListener(`submit`, this._onFormSubmit);
   }
 
   unbind() {
-    this._form.removeEventListener(`submit`, this._onSubmitBtnClick);
+    this._form.removeEventListener(`submit`, this._onFormSubmit);
   }
 
   unrender() {
     this.unbind();
     this._element = null;
+  }
+
+  _onFormSubmit(evt) {
+    evt.preventDefault();
+    return typeof this._onSubmit === `function` && this._onSubmit();
   }
 }
