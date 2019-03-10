@@ -1,8 +1,8 @@
 import filtersData from './data/filters';
 import tasksData, {filters as taskFilters} from './data/tasks';
-import makeFilter from './make-filter';
 import Task from './components/task/task';
 import TaskEdit from './components/task-edit/task-edit';
+import Filter from './components/filter/filter';
 
 const filtersContainer = document.querySelector(`.main__filter`);
 const tasksContainer = document.querySelector(`.board__tasks`);
@@ -12,15 +12,11 @@ const clearTasks = () => {
 };
 
 const renderFilters = (filters, tasks) => {
-  const data = filters.map((filter) => {
-    filter.amount = tasks.filter(taskFilters[filter.type]).length;
-    return filter;
+  filters.forEach(({type, isChecked}) => {
+    const amount = tasks.filter(taskFilters[type]).length;
+    const filter = new Filter({type, isChecked, amount});
+    filtersContainer.appendChild(filter.render());
   });
-
-  return filtersContainer.insertAdjacentHTML(
-      `beforeend`,
-      data.map(makeFilter).join(``)
-  );
 };
 
 const renderTasks = (tasks) => tasks.forEach((it) => {
