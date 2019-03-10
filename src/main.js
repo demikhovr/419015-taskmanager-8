@@ -31,13 +31,13 @@ const renderTasks = (tasks) => tasks.forEach((it) => {
   task.onEdit = () => {
     taskEdit.render();
     tasksContainer.replaceChild(taskEdit.element, task.element);
-    task.unrender();
+    task.destroy();
   };
 
   taskEdit.onSubmit = () => {
     task.render();
     tasksContainer.replaceChild(task.element, taskEdit.element);
-    taskEdit.unrender();
+    taskEdit.destroy();
   };
 });
 

@@ -1,10 +1,10 @@
-import {createElement} from '../../utils/util';
+import Component from '../component';
 import makeTemplate from './template';
 
-export default class TaskEdit {
+export default class TaskEdit extends Component {
   constructor(data) {
-    this.data = data;
-    this._element = null;
+    super();
+    this._data = data;
     this._onSubmit = null;
     this._onFormSubmit = this._onFormSubmit.bind(this);
   }
@@ -13,32 +13,17 @@ export default class TaskEdit {
     this._onSubmit = fn;
   }
 
-  get element() {
-    return this._element;
-  }
-
   get template() {
-    return makeTemplate(this.data);
+    return makeTemplate(this._data);
   }
 
-  render() {
-    this._element = createElement(this.template);
-    this.bind();
-    return this._element;
+  createListeners() {
+    this._formRef = this._element.querySelector(`.card__form`);
+    this._formRef.addEventListener(`submit`, this._onFormSubmit);
   }
 
-  bind() {
-    this._form = this._element.querySelector(`.card__form`);
-    this._form.addEventListener(`submit`, this._onFormSubmit);
-  }
-
-  unbind() {
-    this._form.removeEventListener(`submit`, this._onFormSubmit);
-  }
-
-  unrender() {
-    this.unbind();
-    this._element = null;
+  removeListeners() {
+    this._formRef.removeEventListener(`submit`, this._onFormSubmit);
   }
 
   _onFormSubmit(evt) {

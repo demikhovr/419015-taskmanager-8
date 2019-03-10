@@ -1,10 +1,10 @@
-import {createElement} from '../../utils/util';
+import Component from '../component';
 import makeTemplate from './template';
 
-export default class Task {
+export default class Task extends Component {
   constructor(data) {
+    super();
     this._data = data;
-    this._element = null;
     this._onEdit = null;
     this._onEditBtnClick = this._onEditBtnClick.bind(this);
   }
@@ -13,33 +13,17 @@ export default class Task {
     this._onEdit = fn;
   }
 
-  get element() {
-    return this._element;
-  }
-
   get template() {
     return makeTemplate(this._data);
   }
 
-  render() {
-    this._element = createElement(this.template);
-    this.bind();
-    return this._element;
+  createListeners() {
+    this._editBtnRef = this._element.querySelector(`.card__btn--edit`);
+    this._editBtnRef.addEventListener(`click`, this._onEditBtnClick);
   }
 
-  bind() {
-    this._editBtn = this._element.querySelector(`.card__btn--edit`);
-    this._editBtn.addEventListener(`click`, this._onEditBtnClick);
-  }
-
-  unbind() {
-    this._editBtn.removeEventListener(`click`, this._onEditBtnClick);
-  }
-
-  unrender() {
-    this.unbind();
-    this._element.remove();
-    this._element = null;
+  removeListeners() {
+    this._editBtnRef.removeEventListener(`click`, this._onEditBtnClick);
   }
 
   _onEditBtnClick() {
