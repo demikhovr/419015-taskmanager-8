@@ -1,49 +1,32 @@
-import {createElement} from '../../utils/util';
+import Component from '../component';
 import makeTemplate from './template';
 
-export default class Task {
+export default class Task extends Component {
   constructor(data) {
-    this.data = data;
-    this._element = null;
+    super();
+    this._data = data;
     this._onEdit = null;
     this._onEditBtnClick = this._onEditBtnClick.bind(this);
-  }
-
-  _onEditBtnClick() {
-    if (typeof this._onEdit === `function`) {
-      this._onEdit();
-    }
   }
 
   set onEdit(fn) {
     this._onEdit = fn;
   }
 
-  get element() {
-    return this._element;
-  }
-
   get template() {
-    return makeTemplate(this.data);
+    return makeTemplate(this._data);
   }
 
-  render() {
-    this._element = createElement(this.template);
-    this.bind();
-    return this._element;
+  createListeners() {
+    this._editBtnRef = this._element.querySelector(`.card__btn--edit`);
+    this._editBtnRef.addEventListener(`click`, this._onEditBtnClick);
   }
 
-  bind() {
-    this._editBtn = this._element.querySelector(`.card__btn--edit`);
-    this._editBtn.addEventListener(`click`, this._onEditBtnClick);
+  removeListeners() {
+    this._editBtnRef.removeEventListener(`click`, this._onEditBtnClick);
   }
 
-  unbind() {
-    this._editBtn.removeEventListener(`click`, this._onEditBtnClick);
-  }
-
-  unrender() {
-    this.unbind();
-    this._element = null;
+  _onEditBtnClick() {
+    return typeof this._onEdit === `function` === this._onEdit();
   }
 }
