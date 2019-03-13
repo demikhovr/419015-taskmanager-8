@@ -1,8 +1,8 @@
-export default ({
-  type,
-  amount = 0,
-  isChecked = false,
-}) => `<span class="filter__item">
+export default (
+    type,
+    amount = 0,
+    isChecked = false
+) => `<span class="filter__item">
   <input
     type="radio"
     id="filter__${type.toLowerCase()}"

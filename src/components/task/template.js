@@ -1,15 +1,15 @@
 import moment from 'moment';
 
-export default ({
-  title,
-  dueDate,
-  tags,
-  picture,
-  color,
-  repeatingDays,
-  isFavorite,
-  isDone,
-}) => {
+export default (
+    title,
+    dueDate,
+    tags,
+    picture,
+    color,
+    repeatingDays,
+    isFavorite,
+    isDone
+) => {
   const isRepeat = Object.values(repeatingDays).some((day) => day);
   const repeatClass = isRepeat ? `card--repeat` : ``;
   const deadlineClass = Date.now() > dueDate ? `card--deadline` : ``;
