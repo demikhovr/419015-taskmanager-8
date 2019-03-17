@@ -18,6 +18,10 @@ module.exports = {
             presets: [`@babel/preset-env`],
           },
         },
+      }, {
+        test: /\.css$/,
+        include: /node_modules/,
+        loaders: [`style-loader`, `css-loader`],
       }
     ],
   },
