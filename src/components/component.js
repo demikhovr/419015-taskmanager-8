@@ -7,6 +7,7 @@ export default class Component {
     }
 
     this._element = null;
+    this._state = {};
   }
 
   get element() {
@@ -26,6 +27,8 @@ export default class Component {
   createListeners() {}
 
   removeListeners() {}
+
+  update() {}
 
   destroy() {
     this.removeListeners();

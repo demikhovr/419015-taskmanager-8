@@ -1,4 +1,3 @@
-import moment from 'moment';
 import {
   getRandomArrayItems,
   getRandomNumber,
@@ -11,7 +10,6 @@ const MINUTES = 60;
 const SECONDS = 60;
 const MILLISECONDS = 1000;
 const MAX_TAGS_AMOUNT = 3;
-const DIFF_GRANULARITY = `day`;
 
 const titleList = [
   `Изучить теорию`,
@@ -27,7 +25,7 @@ const tagList = [
   `keks`,
 ];
 
-const colorList = [
+export const colorList = [
   `black`,
   `yellow`,
   `blue`,
@@ -35,15 +33,24 @@ const colorList = [
   `pink`,
 ];
 
+export const Color = {
+  black: `card--black`,
+  yellow: `card--yellow`,
+  blue: `card--blue`,
+  green: `card--green`,
+  pink: `card--pink`,
+};
+
 const getDueDate = () => {
   const randomNumber = getRandomNumber();
   const week = getRandomNumber(MAX_DAYS_AMOUNT) * HOURS * MINUTES * SECONDS * MILLISECONDS;
   return Date.now() + (randomNumber ? -week : week);
 };
 
-const getTask = () => ({
+const getTask = (item, id) => ({
+  id,
   title: titleList[getRandomNumber(titleList.length - 1)],
-  dueDate: getDueDate(),
+  dueDate: getRandomNumber() < 0.5 ? getDueDate() : null,
   tags: new Set(getRandomArrayItems(tagList, MAX_TAGS_AMOUNT)),
   picture: `http://picsum.photos/100/100?r=${Math.random()}`,
   color: colorList[getRandomNumber(colorList.length - 1)],
@@ -59,16 +66,6 @@ const getTask = () => ({
   isFavorite: Boolean(getRandomNumber()),
   isDone: Boolean(getRandomNumber()),
 });
-
-export const filters = {
-  all: (task) => task,
-  overdue: ({dueDate}) => dueDate <= Date.now(),
-  today: ({dueDate}) => moment(dueDate).isSame(moment(), DIFF_GRANULARITY),
-  repeating: ({repeatingDays}) => Object.keys(repeatingDays).filter((day) => repeatingDays[day]).length,
-  tags: ({tags}) => [...tags].length,
-  favorites: ({isFavorite}) => isFavorite,
-  archive: ({isDone}) => isDone,
-};
 
 export default new Array(TASKS_AMOUNT)
   .fill(null)

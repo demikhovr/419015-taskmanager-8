@@ -1,6 +1,8 @@
 import moment from 'moment';
+import {Color} from '../../data/tasks';
 
 export default (
+    id,
     title,
     dueDate,
     tags,
@@ -14,7 +16,7 @@ export default (
   const repeatClass = isRepeat ? `card--repeat` : ``;
   const deadlineClass = Date.now() > dueDate ? `card--deadline` : ``;
 
-  return `<article class="card card--${color} ${repeatClass} ${deadlineClass}">
+  return `<article class="card ${Color[color]} ${repeatClass} ${deadlineClass}">
     <div class="card__inner">
       <div class="card__control">
         <button type="button" class="card__btn card__btn--edit">
@@ -43,14 +45,14 @@ export default (
 
       <div class="card__settings">
         <div class="card__details">
-          <div class="card__dates">
+          ${dueDate ? `<div class="card__dates">
             <span class="card__date">
               ${moment(dueDate).format(`D MMMM`)}
             </span>
             <span class="card__date">
               ${moment(dueDate).format(`HH:mm A`)}
             </span>
-          </div>
+          </div>` : ``}
 
           <div class="card__hashtag">
             <div class="card__hashtag-list">

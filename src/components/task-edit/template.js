@@ -1,11 +1,15 @@
 import moment from 'moment';
+import {
+  Color,
+  colorList,
+} from '../../data/tasks';
 
 const getHashTagsTemplate = (tags) => tags
   .map((tag) => `<span class="card__hashtag-inner">
     <input
       type="hidden"
       name="hashtag"
-      value="repeat"
+      value="${tag}"
       class="card__hashtag-hidden-input"
     />
     <button type="button" class="card__hashtag-name">
@@ -23,13 +27,29 @@ const getRepeatingDaysTemplate = (repeatingDays) => Object.keys(repeatingDays)
     id="repeat-mo-${index + 1}"
     name="repeat"
     value="${day}"
-    ${repeatingDays[day] ? `checked` : ``}
+    ${repeatingDays[day] && `checked`}
   />
   <label class="card__repeat-day" for="repeat-mo-${index + 1}"
     >${day}</label
   >`).join(``);
 
+const getColorsTemplate = (id, currentColor) => colorList.map((color) => `<input
+    type="radio"
+    id="color-${color}-${id}"
+    class="card__color-input card__color-input--${color} visually-hidden"
+    name="color"
+    value="${color}"
+    ${currentColor === color && `checked`}
+  />
+  <label
+    for="color-${color}-${id}"
+    class="card__color card__color--${color}"
+  >
+    ${color}
+  </label>`).join(``);
+
 export default (
+    id,
     title,
     dueDate,
     tags,
@@ -37,13 +57,13 @@ export default (
     color,
     repeatingDays,
     isFavorite,
-    isDone
+    isDone,
+    isDate,
+    isRepeated
 ) => {
-  const isRepeat = Object.values(repeatingDays).some((day) => day);
-  const repeatClass = isRepeat ? `card--repeat` : ``;
-  const deadlineClass = Date.now() > dueDate ? `card--deadline` : ``;
+  const repeatClass = isRepeated ? `card--repeat` : ``;
 
-  return `<article class="card card--edit card--${color} ${repeatClass} ${deadlineClass}">
+  return `<article class="card card--edit ${Color[color]} ${repeatClass}">
     <form class="card__form" method="get">
       <div class="card__inner">
         <div class="card__control">
@@ -81,17 +101,17 @@ export default (
           <div class="card__details">
             <div class="card__dates">
               <button class="card__date-deadline-toggle" type="button">
-                date: <span class="card__date-status">no</span>
+                date: <span class="card__date-status">${isDate ? `yes` : `no`}</span>
               </button>
   
-              <fieldset class="card__date-deadline">
+              <fieldset class="card__date-deadline" ${!isDate && `disabled`}>
                 <label class="card__input-deadline-wrap">
                   <input
                     class="card__date"
                     type="text"
                     placeholder="23 September"
                     name="date"
-                    value="${moment(dueDate).format(`D MMMM`)}"
+                    value="${dueDate ? moment(dueDate).format(`D MMMM`) : ``}"
                   />
                 </label>
                 <label class="card__input-deadline-wrap">
@@ -100,16 +120,16 @@ export default (
                     type="text"
                     placeholder="11:15 PM"
                     name="time"
-                    value="${moment(dueDate).format(`HH:mm A`)}"
+                    value="${dueDate ? moment(dueDate).format(`HH:mm A`) : ``}"
                   />
                 </label>
               </fieldset>
   
               <button class="card__repeat-toggle" type="button">
-                repeat:<span class="card__repeat-status">no</span>
+                repeat:<span class="card__repeat-status">${isRepeated ? `yes` : `no`}</span>
               </button>
   
-              <fieldset class="card__repeat-days">
+              <fieldset class="card__repeat-days" ${!isRepeated && `disabled`}>
                 <div class="card__repeat-days-inner">
                   ${getRepeatingDaysTemplate(repeatingDays)}
                 </div>
@@ -149,67 +169,7 @@ export default (
           <div class="card__colors-inner">
             <h3 class="card__colors-title">Color</h3>
             <div class="card__colors-wrap">
-              <input
-                type="radio"
-                id="color-black-5"
-                class="card__color-input card__color-input--black visually-hidden"
-                name="color"
-                value="black"
-              />
-              <label
-                for="color-black-5"
-                class="card__color card__color--black"
-                >black</label
-              >
-              <input
-                type="radio"
-                id="color-yellow-5"
-                class="card__color-input card__color-input--yellow visually-hidden"
-                name="color"
-                value="yellow"
-              />
-              <label
-                for="color-yellow-5"
-                class="card__color card__color--yellow"
-                >yellow</label
-              >
-              <input
-                type="radio"
-                id="color-blue-5"
-                class="card__color-input card__color-input--blue visually-hidden"
-                name="color"
-                value="blue"
-              />
-              <label
-                for="color-blue-5"
-                class="card__color card__color--blue"
-                >blue</label
-              >
-              <input
-                type="radio"
-                id="color-green-5"
-                class="card__color-input card__color-input--green visually-hidden"
-                name="color"
-                value="green"
-                checked
-              />
-              <label
-                for="color-green-5"
-                class="card__color card__color--green"
-                >green</label
-              >
-              <input
-                type="radio"
-                id="color-pink-5"
-                class="card__color-input card__color-input--pink visually-hidden"
-                name="color"
-                value="pink"
-              />
-              <label
-                for="color-pink-5"
-                class="card__color card__color--pink"
-                >pink</label
-              >
+              ${getColorsTemplate(id, color)}
             </div>
           </div>
         </div>

@@ -8,8 +8,8 @@ export default (
     id="filter__${type.toLowerCase()}"
     class="filter__input visually-hidden"
     name="filter"
-    ${isChecked ? `checked` : ``}
-    ${!amount ? `disabled` : ``}
+    ${isChecked && `checked`}
+    ${!amount && `disabled`}
   />
   <label for="filter__${type.toLowerCase()}" class="filter__label">
     ${type.toUpperCase()}
