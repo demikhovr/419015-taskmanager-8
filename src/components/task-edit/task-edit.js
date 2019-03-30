@@ -241,7 +241,9 @@ export default class TaskEdit extends Component {
   }
 
   _onDeleteTask() {
-    this._onDelete(this._id);
+    if (typeof this._onDelete === `function`) {
+      this._onDelete(this._id);
+    }
   }
 
   createMapper(target) {
