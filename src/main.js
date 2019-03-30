@@ -51,43 +51,40 @@ const renderTasks = (data) => {
     };
 
     taskComponent.onAddToFavorites = (id, isFavorite) => {
-      const tasks = tasksData.map((task) => {
-        if (task.id === id) {
-          task.isFavorite = isFavorite;
-        }
+      const index = tasksData.findIndex((task) => task.id === id);
+      tasksData[index] = {
+        ...tasksData[index],
+        isFavorite,
+      };
 
-        return task;
-      });
-
-      updateTasks(taskComponent, tasks, FAVORITES_FILTER);
+      updateTasks(taskComponent, tasksData, FAVORITES_FILTER);
     };
 
     taskComponent.onAddToArchive = (id, isDone) => {
-      const tasks = tasksData.map((task) => {
-        if (task.id === id) {
-          task.isDone = isDone;
-        }
+      const index = tasksData.findIndex((task) => task.id === id);
+      tasksData[index] = {
+        ...tasksData[index],
+        isDone,
+      };
 
-        return task;
-      });
-
-      updateTasks(taskComponent, tasks, ARCHIVE_FILTER);
+      updateTasks(taskComponent, tasksData, ARCHIVE_FILTER);
     };
 
-    taskEditComponent.onSubmit = (newTask) => {
-      Object.keys(newTask).forEach((prop) => (taskComponent[prop] = newTask[prop]));
+    taskEditComponent.onSubmit = (task) => {
+      Object.keys(task).forEach((prop) => (taskComponent[prop] = task[prop]));
       taskComponent.update(taskComponent);
       taskComponent.render();
       tasksContainer.replaceChild(taskComponent.element, taskEditComponent.element);
       taskEditComponent.destroy();
     };
 
-    taskEditComponent.onDelete = (taskId) => {
-      const tasks = tasksData.filter(({id}) => id !== taskId);
+    taskEditComponent.onDelete = (id) => {
+      const index = tasksData.findIndex((task) => task.id === id);
+      tasksData.splice(index, 1);
       taskEditComponent.destroy();
       taskComponent = null;
       taskEditComponent = null;
-      renderFilters(filtersData, tasks);
+      renderFilters(filtersData, tasksData);
     };
   });
 };
