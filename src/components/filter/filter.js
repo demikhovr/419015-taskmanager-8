@@ -11,12 +11,12 @@ export default class Filter extends Component {
     this.type = type;
     this.amount = amount;
     this.isChecked = isChecked;
-    this.onChange = null;
+    this.onFilter = null;
     this._onFilterChange = this._onFilterChange.bind(this);
   }
 
-  set onChange(fn) {
-    this._onChange = fn;
+  set onFilter(fn) {
+    this._onFilter = fn;
   }
 
   get template() {
@@ -37,6 +37,9 @@ export default class Filter extends Component {
 
   _onFilterChange({target}) {
     const filter = target.id.replace(/filter__/, ``);
-    this._onChange(filter);
+
+    if (typeof this._onFilter === `function`) {
+      this._onFilter(filter);
+    }
   }
 }

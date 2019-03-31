@@ -8,7 +8,7 @@ export const filters = {
   all: (task) => task,
   overdue: ({dueDate}) => dueDate <= Date.now(),
   today: ({dueDate}) => moment(dueDate).isSame(moment(), DIFF_GRANULARITY),
-  repeating: ({repeatingDays}) => Object.keys(repeatingDays).filter((day) => repeatingDays[day]).length,
+  repeating: ({repeatingDays}) => [...Object.entries(repeatingDays)].some(([, day]) => day),
   tags: ({tags}) => [...tags].length,
   favorites: ({isFavorite}) => isFavorite,
   archive: ({isDone}) => isDone,

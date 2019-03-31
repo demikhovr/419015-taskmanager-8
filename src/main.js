@@ -23,7 +23,7 @@ const renderFilters = (filters, tasks) => {
     const isChecked = type === currentFilterType;
     const amount = tasks.filter(taskFilters[type]).length;
     const filter = new Filter({type, isChecked, amount});
-    filter.onChange = (filterName) => (currentFilterType = filterName);
+    filter.onFilter = (filterName) => (currentFilterType = filterName);
     filtersContainer.appendChild(filter.render());
   });
 };
