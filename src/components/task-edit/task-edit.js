@@ -1,13 +1,13 @@
-import Component from '../component';
-import makeTemplate from './template';
+import moment from 'moment';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
+import Component from '../component';
+import makeTemplate from './template';
 import {
   dateConfig,
   timeConfig,
   imageTypes,
 } from '../../data/data';
-import moment from 'moment';
 
 export default class TaskEdit extends Component {
   constructor({

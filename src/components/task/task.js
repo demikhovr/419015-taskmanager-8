@@ -1,6 +1,6 @@
+import moment from 'moment';
 import Component from '../component';
 import makeTemplate from './template';
-import moment from 'moment';
 
 export default class Task extends Component {
   constructor({

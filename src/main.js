@@ -1,3 +1,6 @@
+import flatpickr from 'flatpickr';
+import moment from 'moment';
+import Chart from 'chart.js';
 import filtersData, {
   DEFAULT_FILTER_TYPE,
   FAVORITES_FILTER,
@@ -8,10 +11,96 @@ import tasksData from './data/tasks';
 import Task from './components/task/task';
 import TaskEdit from './components/task-edit/task-edit';
 import Filter from './components/filter/filter';
+import {
+  statisticPeriodConfig,
+  daysChartConfig,
+  tagsChartConfig,
+  colorsChartConfig,
+} from './data/data';
 
+const controlBtnsWrapper = document.querySelector(`.control__btn-wrap`);
+const boardContainer = document.querySelector(`.board`);
 const filtersContainer = document.querySelector(`.main__filter`);
 const tasksContainer = document.querySelector(`.board__tasks`);
+const statisticContainer = document.querySelector(`.statistic`);
+const statisticPeriodInput = statisticContainer.querySelector(`.statistic__period-input`);
+const daysCtx = document.querySelector(`.statistic__days`);
+const tagsCtx = document.querySelector(`.statistic__tags`);
+const colorsCtx = document.querySelector(`.statistic__colors`);
+let daysChart = null;
+let tagsChart = null;
+let colorsChart = null;
 let currentFilterType = DEFAULT_FILTER_TYPE;
+
+const initDaysChart = () => {
+  if (daysChart) {
+    daysChart.destroy();
+  }
+
+  daysChart = new Chart(daysCtx, daysChartConfig);
+};
+
+const initTagsChart = () => {
+  if (tagsChart) {
+    tagsChart.destroy();
+  }
+
+  tagsChart = new Chart(tagsCtx, tagsChartConfig);
+};
+
+const initColorsChart = () => {
+  if (colorsChart) {
+    colorsChart.destroy();
+  }
+
+  colorsChart = new Chart(colorsCtx, colorsChartConfig);
+};
+
+const showTasks = () => {
+  boardContainer.classList.remove(`visually-hidden`);
+  statisticContainer.classList.add(`visually-hidden`);
+};
+
+const initCharts = () => {
+  initDaysChart();
+  initTagsChart();
+  initColorsChart();
+};
+
+const updateCharts = () => {
+  daysChart.update();
+  tagsChart.update();
+  colorsChart.update();
+};
+
+statisticPeriodConfig.onClose = (selectedDates) => {
+  const [start, end] = selectedDates;
+  const startUnix = moment(start).valueOf();
+  const endUnix = moment(end).valueOf();
+  const data = tasksData.filter(({dueDate}) => startUnix < dueDate && dueDate < endUnix);
+  updateCharts(data);
+};
+
+const showStatistic = () => {
+  boardContainer.classList.add(`visually-hidden`);
+  statisticContainer.classList.remove(`visually-hidden`);
+  flatpickr(statisticPeriodInput, statisticPeriodConfig);
+  initCharts();
+};
+
+const controlsMapper = {
+  'control__task': showTasks,
+  'control__new-task': showTasks,
+  'control__statistic': showStatistic,
+};
+
+const onControlBtnChange = ({target}) => {
+  const {id} = target;
+
+  if (controlsMapper[id]) {
+    controlsMapper[id]();
+  }
+};
 
 const clearTasks = () => (tasksContainer.innerHTML = ``);
 const clearFilters = () => (filtersContainer.innerHTML = ``);
@@ -99,3 +188,4 @@ filtersContainer.addEventListener(`click`, ({target}) => {
 
 renderFilters(filtersData, tasksData);
 renderTasks(tasksData);
+controlBtnsWrapper.addEventListener(`change`, onControlBtnChange);
